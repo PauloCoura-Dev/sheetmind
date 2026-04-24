@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     MAX_FILE_SIZE_MB: int = 20
     ENVIRONMENT: str = "development"
     # Plain str to avoid pydantic_settings JSON-parsing before validators run
-    BACKEND_CORS_ORIGINS: str = '["http://localhost:3000"]'
+    BACKEND_CORS_ORIGINS: str = "*"
 
     @property
     def cors_origins(self) -> List[str]:
