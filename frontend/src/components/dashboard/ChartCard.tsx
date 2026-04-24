@@ -33,12 +33,12 @@ export default function ChartCard({ chart }: ChartCardProps) {
         {chart.chart_type === "line" ? (
           <LineChart data={chart.data as Record<string, unknown>[]}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey={chart.x_key} tick={{ fontSize: 11 }} />
+            <XAxis dataKey={chart.x_key ?? ""} tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
             <Line
               type="monotone"
-              dataKey={chart.y_key}
+              dataKey={chart.y_key ?? ""}
               stroke={COLORS[0]}
               strokeWidth={2}
               dot={false}
@@ -47,10 +47,10 @@ export default function ChartCard({ chart }: ChartCardProps) {
         ) : chart.chart_type === "bar" ? (
           <BarChart data={chart.data as Record<string, unknown>[]}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey={chart.x_key} tick={{ fontSize: 11 }} />
+            <XAxis dataKey={chart.x_key ?? ""} tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
-            <Bar dataKey={chart.y_key} fill={COLORS[0]} radius={[4, 4, 0, 0]} />
+            <Bar dataKey={chart.y_key ?? ""} fill={COLORS[0]} radius={[4, 4, 0, 0]} />
           </BarChart>
         ) : chart.chart_type === "pie" ? (
           <PieChart>
