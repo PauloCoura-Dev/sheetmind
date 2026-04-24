@@ -21,6 +21,15 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if not v or (isinstance(v, str) and not v.strip()):
+            return ["http://localhost:3000"]
+        if v == ["*"] or v == "*":
+            return ["*"]
+        return v
+
     model_config = {"env_file": ".env"}
 
 
