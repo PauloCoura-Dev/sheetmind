@@ -1,3 +1,4 @@
+import json
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from typing import List
@@ -12,6 +13,7 @@ class Settings(BaseSettings):
         if isinstance(v, str) and v.startswith("postgresql://"):
             return v.replace("postgresql://", "postgresql+asyncpg://", 1)
         return v
+
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
@@ -19,16 +21,19 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "/app/uploads"
     MAX_FILE_SIZE_MB: int = 20
     ENVIRONMENT: str = "development"
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
+    # Plain str to avoid pydantic_settings JSON-parsing before validators run
+    BACKEND_CORS_ORIGINS: str = '["http://localhost:3000"]'
 
-    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v):
-        if not v or (isinstance(v, str) and not v.strip()):
+    @property
+    def cors_origins(self) -> List[str]:
+        v = self.BACKEND_CORS_ORIGINS.strip()
+        if not v:
             return ["http://localhost:3000"]
-        if v == ["*"] or v == "*":
-            return ["*"]
-        return v
+        try:
+            result = json.loads(v)
+            return result if isinstance(result, list) else [result]
+        except json.JSONDecodeError:
+            return [o.strip() for o in v.split(",") if o.strip()]
 
     model_config = {"env_file": ".env"}
 
