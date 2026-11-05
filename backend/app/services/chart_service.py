@@ -159,7 +159,7 @@ def _build_histogram(df: pd.DataFrame, num_col: str) -> dict | None:
             .reset_index()
         )
         data = [
-            {"category": f"{edge:.1f}–{edges[i+1]:.1f}", "value": int(row.iloc[1])}
+            {"category": f"{edges[i]:.1f}–{edges[i+1]:.1f}", "value": int(row.iloc[1])}
             for i, (_, row) in enumerate(hist_data.iterrows())
         ]
         return {
