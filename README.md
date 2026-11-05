@@ -60,7 +60,8 @@ O Claude Haiku recebe **só um resumo**: nome e tipo de cada coluna, contagens, 
 | Back-end | Python 3.12, FastAPI, pandas, SQLAlchemy 2 (async), Alembic, PostgreSQL 16, JWT |
 | Front-end | Next.js 15, React 19, TypeScript, TanStack Query, Recharts, Tailwind CSS, Zod |
 | IA | Anthropic API (Claude Haiku) |
-| Infra | Docker Compose, GitHub Actions (lint + build), Railway |
+| Infra | Docker Compose, GitHub Actions (lint, testes e build), Railway |
+| Testes | pytest |
 
 ## Rodar localmente
 
@@ -81,6 +82,16 @@ docker compose up --build
 
 As migrations rodam sozinhas quando o back-end sobe.
 
+## Testes
+
+As regras da nota de confiabilidade e a montagem dos gráficos têm testes automatizados. O GitHub Actions roda o lint (ruff) e os testes a cada push, junto com o build do front-end.
+
+```bash
+cd backend
+pip install -r requirements-dev.txt
+pytest
+```
+
 ## Estrutura
 
 ```
@@ -90,6 +101,7 @@ backend/
     services/    parser, quality, chart, insight, pipeline
     models/      user, upload, analysis
   alembic/       migrations
+  tests/         regras de qualidade e gráficos
 frontend/
   src/
     app/         login, cadastro, painel, relatório
